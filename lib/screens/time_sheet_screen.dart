@@ -6,6 +6,8 @@ import 'package:checkpoint/widgets/welcome_box.dart';
 import 'package:flutter/material.dart';
 
 class TimeSheetScreen extends StatelessWidget {
+  static const String route = '/time-sheet';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,8 +19,7 @@ class TimeSheetScreen extends StatelessWidget {
         backgroundColor: Colors.black87,
         child: Icon(Icons.add),
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => CheckpointScreen()));
+          Navigator.of(context).pushNamed(CheckpointScreen.route);
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,

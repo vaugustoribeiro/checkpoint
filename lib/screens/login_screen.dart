@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class LoginScreen extends StatelessWidget {
+  static const String route = '/login';
+
   final String company = 'a882964';
   final String origin = 'portal';
   final TextEditingController _registrationTextController =

@@ -8,6 +8,15 @@ class TimeSheetModel with ChangeNotifier {
   TimeSheetService timeSheetService = TimeSheetService();
   CalendarController calendarController = CalendarController();
 
+  TimeSheetModel() {
+    timeSheetService.get(DateTime.now()).then((value) {
+      ready = true;
+      load = value;
+    });
+  }
+
+  bool ready = false;
+
   DateTime _validity = DateTime.now();
   Map<String, dynamic> _user = {};
   Map<DateTime, List> _events = {};
@@ -28,7 +37,7 @@ class TimeSheetModel with ChangeNotifier {
   bool get isRecordsEmpty =>
       selectedDayEvents.isEmpty || selectedDayEvents[0]['records'].isEmpty;
 
-  changeValidity(DateTime validity) async {
+  Future changeValidity(DateTime validity) async {
     _validity = validity;
 
     var countings = await timeSheetService.get(validity);

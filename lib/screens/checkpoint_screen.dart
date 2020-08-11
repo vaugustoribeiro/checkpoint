@@ -2,9 +2,15 @@ import 'package:checkpoint/apis/justification_api.dart';
 import 'package:checkpoint/services/simple_snack_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:checkpoint/models/time_sheet_model.dart';
 
 class CheckpointScreen extends StatelessWidget {
+  static const String route = '/checkpoint';
+
   Widget build(BuildContext context) {
+    var provider = Provider.of<TimeSheetModel>(context);
+
     return GestureDetector(
       onTap: () {
         FocusScopeNode currentFocus = FocusScope.of(context);
@@ -23,22 +29,31 @@ class CheckpointScreen extends StatelessWidget {
             RegisterButton(
               message: 'Inicio expediente',
               readonly: true,
+              validity: DateTime(provider.selectedDay.year,
+                  provider.selectedDay.month, provider.selectedDay.day, 9),
             ),
             RegisterButton(
               message: 'Inicio almoço',
               readonly: true,
+              validity: DateTime(provider.selectedDay.year,
+                  provider.selectedDay.month, provider.selectedDay.day, 12),
             ),
             RegisterButton(
               message: 'Fim almoço',
               readonly: true,
+              validity: DateTime(provider.selectedDay.year,
+                  provider.selectedDay.month, provider.selectedDay.day, 13),
             ),
             RegisterButton(
               message: 'Fim expediente',
               readonly: true,
+              validity: DateTime(provider.selectedDay.year,
+                  provider.selectedDay.month, provider.selectedDay.day, 18),
             ),
             RegisterButton(
               message: '',
               readonly: false,
+              validity: DateTime.now(),
             ),
           ],
         ),
@@ -51,8 +66,10 @@ class RegisterButton extends StatelessWidget {
   final JustificationApi _justificationApi = JustificationApi();
   final TextEditingController _txtMessageController = TextEditingController();
   final bool readonly;
+  final DateTime validity;
 
-  RegisterButton({String message = '', this.readonly = false}) {
+  RegisterButton(
+      {@required this.validity, String message = '', this.readonly = false}) {
     _txtMessageController.text = message;
   }
 
@@ -63,6 +80,10 @@ class RegisterButton extends StatelessWidget {
     try {
       SimpleSnackService.busy(context, 'Registrando...');
       await _justificationApi.post(validity, _txtMessageController.text);
+
+      var provider = Provider.of<TimeSheetModel>(context, listen: false);
+      await provider.changeValidity(validity);
+
       SimpleSnackService.success(context, 'Registro realizado com sucesso!');
     } catch (err) {
       SimpleSnackService.error(context, 'Deu ruim!');
@@ -90,7 +111,7 @@ class RegisterButton extends StatelessWidget {
                 fillColor: Colors.white,
                 border: OutlineInputBorder(),
                 labelText: 'Customizado',
-                hasFloatingPlaceholder: false,
+                floatingLabelBehavior: FloatingLabelBehavior.never,
                 isDense: true,
               ),
             ),
@@ -109,7 +130,7 @@ class RegisterButton extends StatelessWidget {
                 DatePicker.showDateTimePicker(
                   context,
                   locale: LocaleType.pt,
-                  currentTime: DateTime.now(),
+                  currentTime: validity,
                   onConfirm: (DateTime dt) {
                     registerCheckPoint(context, dt);
                   },

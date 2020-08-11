@@ -23,7 +23,13 @@ class CountingApi extends BaseApi {
 
     var x = responses[1].data['meses'][to]['totais'] as List;
 
-    var y = x.firstWhere((p) => p['descricao'] == 'SALDO');
+    var z = x.where((p) => p['descricao'] == 'SALDO').toList();
+
+    Map<String, dynamic> y = {'valor': '0'};
+
+    if (z.isNotEmpty) {
+      y['valor'] = z[0]['valor'];
+    }
 
     Map<String, dynamic> data = {
       'user': responses[0].data['funcionario'],

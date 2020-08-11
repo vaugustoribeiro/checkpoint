@@ -19,7 +19,7 @@ class Calendar extends StatelessWidget {
         locale: "pt_BR",
         onDaySelected: timeSheetModel.selectDay,
         events: timeSheetModel.events,
-        startingDayOfWeek: StartingDayOfWeek.monday,
+        startingDayOfWeek: StartingDayOfWeek.sunday,
         availableGestures: AvailableGestures.horizontalSwipe,
         availableCalendarFormats: const {
           CalendarFormat.month: 'Mês',
