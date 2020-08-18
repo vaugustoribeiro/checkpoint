@@ -21,19 +21,19 @@ class CountingApi extends BaseApi {
 
     var responses = await requests;
 
-    var x = responses[1].data['meses'][to]['totais'] as List;
+    var totals = responses[1].data['meses'][to]['totais'] as List;
 
-    var z = x.where((p) => p['descricao'] == 'SALDO').toList();
+    var balances = totals.where((p) => p['descricao'] == 'SALDO').toList();
 
-    Map<String, dynamic> y = {'valor': '0'};
+    Map<String, dynamic> balance = {'valor': '0'};
 
-    if (z.isNotEmpty) {
-      y['valor'] = z[0]['valor'];
+    if (balances.isNotEmpty) {
+      balance['valor'] = balances[0]['valor'];
     }
 
     Map<String, dynamic> data = {
       'user': responses[0].data['funcionario'],
-      'bank': y['valor'],
+      'bank': balance['valor'],
       'days': {},
     };
 
